@@ -53,16 +53,20 @@ daemon-status:
 daemon-uninstall:
     node scripts/run-node.mjs daemon uninstall
 
-# ─── Deploy (build + restart) ────────────────────────────────────────────────
+# ─── Install & Deploy ─────────────────────────────────────────────────────────
 
-# Build and restart the daemon in one shot
-deploy: build daemon-restart
+# Symlink the `openclaw` binary globally so it's on your PATH
+link:
+    pnpm link --global
+
+# Build, link globally, and restart the daemon
+deploy: build link daemon-restart
 
 # Fast deploy — incremental TS build + daemon restart (skip UI)
 deploy-fast: build-fast daemon-restart
 
-# Full redeploy — clean build, reinstall daemon, start
-redeploy: build daemon-uninstall
+# Full redeploy — clean build, link globally, reinstall daemon, start
+redeploy: build link daemon-uninstall
     just daemon-install
     just daemon-start
 
